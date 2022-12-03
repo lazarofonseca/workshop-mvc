@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +30,7 @@ public class TituloController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView salvar(Titulo titulo) {
+	public ModelAndView salvar(@Validated Titulo titulo) {
 
 		tituloRepository.save(titulo);
 		ModelAndView mv = new ModelAndView("CadastroTitulo");
@@ -37,9 +38,12 @@ public class TituloController {
 		return mv;
 	}
 	
-	@RequestMapping
-	public String pesquisar() {
-		return "PesquisaTitulo";
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView pesquisar() {
+		List<Titulo> todosTitulos = tituloRepository.findAll();
+		ModelAndView mv = new ModelAndView("PesquisaTitulo");
+		mv.addObject("titulos", todosTitulos);
+		return mv;
 	}
 	
 	@ModelAttribute("todosStatusTitulo")
